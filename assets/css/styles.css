@@ -562,3 +562,135 @@ html.has-modal { overflow: hidden; }
 /* Habilidades más compacta */
 .section--skills { padding: clamp(48px, 6vw, 72px) 0; }
 .section--skills .section__head { margin-bottom: 24px; }
+
+/* =========================================================
+   VISTA PREVIA: nueva paleta azul (escala 5 a 100) + acento turquesa + movimiento
+   ========================================================= */
+:root {
+  --p5: #000b19; --p10: #001737; --p20: #00255a; --p30: #00347d; --p40: #00429f;
+  --p50: #004ebc; --p60: #0059d5; --p70: #2577e9; --p80: #4b92f5; --p90: #96c1fc;
+  --p95: #c2dbfe; --p99: #eef5ff; --p100: #ffffff;
+  --accent: #2dd4bf;        /* turquesa, solo en pocos lugares */
+  --accent-ink: #000b19;
+
+  --paper: var(--p100);
+  --tint: var(--p99);
+  --head: #e2eefe;          /* entre 99 y 95 */
+  --grid: #cfe0f8;
+  --ink: var(--p10);
+  --ink-2: #2b4168;
+  --ink-3: #50658a;
+  --select: var(--p50);
+  --select-ink: #ffffff;
+  --select-soft: #e0ecfe;
+  --night: var(--p10);
+  --night-ink: var(--p99);
+  --night-2: var(--p90);
+  --btn-grad: linear-gradient(135deg, var(--p40), var(--p60));
+  --btn-grad-hover: linear-gradient(135deg, var(--p30), var(--p50));
+  --glow-a: color-mix(in srgb, var(--p90) 45%, transparent);
+  --glow-b: color-mix(in srgb, var(--p95) 70%, transparent);
+  --glow-c: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: var(--p5); --tint: #001128; --head: var(--p10); --grid: #0e2b55;
+    --ink: var(--p99); --ink-2: var(--p95); --ink-3: #90b2df;
+    --select: var(--p80); --select-ink: var(--p5); --select-soft: #06214a;
+    --night: #00122c; --night-ink: var(--p99); --night-2: var(--p90);
+    --btn-grad: linear-gradient(135deg, var(--p80), var(--p90));
+    --btn-grad-hover: linear-gradient(135deg, var(--p70), var(--p80));
+    --glow-a: color-mix(in srgb, var(--p50) 30%, transparent);
+    --glow-b: color-mix(in srgb, var(--p30) 40%, transparent);
+    --glow-c: color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+}
+:root[data-theme="dark"] {
+    --paper: var(--p5); --tint: #001128; --head: var(--p10); --grid: #0e2b55;
+    --ink: var(--p99); --ink-2: var(--p95); --ink-3: #90b2df;
+    --select: var(--p80); --select-ink: var(--p5); --select-soft: #06214a;
+    --night: #00122c; --night-ink: var(--p99); --night-2: var(--p90);
+    --btn-grad: linear-gradient(135deg, var(--p80), var(--p90));
+    --btn-grad-hover: linear-gradient(135deg, var(--p70), var(--p80));
+    --glow-a: color-mix(in srgb, var(--p50) 30%, transparent);
+    --glow-b: color-mix(in srgb, var(--p30) 40%, transparent);
+    --glow-c: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+/* Botón principal con gradiente sutil (50 a 70 en espíritu, 40 a 60 para que el texto blanco pase AA) */
+.btn--primary { background: var(--btn-grad); border: 0; box-shadow: 0 12px 26px -14px var(--p50); }
+.btn--primary:hover { background: var(--btn-grad-hover); transform: translateY(-2px); box-shadow: 0 16px 30px -14px var(--p50); }
+
+/* Presentación: fondo con luces suaves que se mueven lento */
+.hero { isolation: isolate; overflow: hidden; }
+.hero::before {
+  content: ""; position: absolute; inset: -20%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 78% 30%, var(--glow-a), transparent 70%),
+    radial-gradient(34% 38% at 12% 75%, var(--glow-b), transparent 70%),
+    radial-gradient(22% 26% at 60% 85%, var(--glow-c), transparent 70%);
+  animation: drift 22s ease-in-out infinite alternate;
+}
+@keyframes drift { to { transform: translate3d(-4%, 3%, 0) scale(1.06); } }
+
+/* Acento: subrayado turquesa que se dibuja bajo el nombre */
+.hl { position: relative; white-space: nowrap; }
+.hl::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: .06em; height: .14em; z-index: -1;
+  background: var(--accent); border-radius: 4px;
+  transform-origin: left; animation: underline .9s .35s cubic-bezier(.2,.7,.2,1) both;
+}
+.hero h1 { position: relative; z-index: 0; }
+@keyframes underline { from { transform: scaleX(0); } }
+
+/* Títulos de sección con una barrita en gradiente */
+.section__head h2::after {
+  content: ""; display: block; width: 56px; height: 4px; margin-top: 14px; border-radius: 4px;
+  background: linear-gradient(90deg, var(--p50), var(--p70) 70%, var(--accent));
+}
+
+/* La hoja: selección con el azul nuevo y el punto de arrastre en turquesa */
+.sheet { border-radius: 10px; overflow: hidden; box-shadow: 0 30px 60px -36px color-mix(in srgb, var(--p30) 70%, transparent); }
+.sheet td.is-sel::after { background: var(--accent); }
+
+/* Proyectos: la vista previa se eleva al pasar el mouse */
+.preview { border-radius: 14px; transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, border-color .35s; }
+.project:hover .preview { transform: translateY(-6px); border-color: var(--p80); box-shadow: 0 40px 70px -40px color-mix(in srgb, var(--p40) 80%, transparent); }
+.project__scope { color: var(--select); }
+.project__note { border-left-color: var(--accent); }
+
+/* Línea de tiempo: el hito más reciente en turquesa */
+.timeline__item:first-child::after { background: var(--accent); border-color: var(--accent); }
+
+/* Chips y perfiles: pequeño salto */
+.chips li, .social a { transition: border-color .2s, background-color .2s, color .2s, transform .2s; }
+.chips li:hover, .social a:hover { transform: translateY(-2px); }
+
+/* Tarjeta de certificados */
+.certs { border-radius: 14px; transition: box-shadow .3s; }
+.certs:hover { box-shadow: 0 24px 50px -36px color-mix(in srgb, var(--p40) 80%, transparent); }
+
+/* Contacto: gradiente de 10 a 20 con un brillo */
+.contact {
+  background:
+    radial-gradient(50% 70% at 90% 0%, color-mix(in srgb, var(--p60) 35%, transparent), transparent 70%),
+    linear-gradient(160deg, var(--p10), var(--p20));
+}
+:root[data-theme="dark"] .contact { background: radial-gradient(50% 70% at 90% 0%, color-mix(in srgb, var(--p50) 25%, transparent), transparent 70%), linear-gradient(160deg, #00122c, var(--p10)); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .contact { background: radial-gradient(50% 70% at 90% 0%, color-mix(in srgb, var(--p50) 25%, transparent), transparent 70%), linear-gradient(160deg, #00122c, var(--p10)); }
+}
+.footer { background: var(--p20); }
+:root[data-theme="dark"] .footer { background: var(--p10); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .footer { background: var(--p10); } }
+.contact .btn--light { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.contact .btn--light:hover { background: #5eead4; border-color: #5eead4; }
+.contact__list a:hover svg { color: var(--accent); }
+.scrollhint__dot { background: var(--accent); }
+
+/* Sin movimiento si la persona lo pidió */
+@media (prefers-reduced-motion: reduce) {
+  .hero::before, .hl::after { animation: none; }
+  .preview, .chips li, .social a, .btn--primary { transition: none; }
+  .project:hover .preview, .chips li:hover, .social a:hover, .btn--primary:hover { transform: none; }
+}
