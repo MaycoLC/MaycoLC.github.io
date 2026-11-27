@@ -694,3 +694,32 @@ html.has-modal { overflow: hidden; }
   .preview, .chips li, .social a, .btn--primary { transition: none; }
   .project:hover .preview, .chips li:hover, .social a:hover, .btn--primary:hover { transform: none; }
 }
+
+/* ---------- Herramientas con logotipo (logos de svgl.app y Simple Icons, guardados localmente) ---------- */
+.tools { gap: 8px; }
+.tools li.tool {
+  --brand: var(--select);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px 6px 10px; font-size: 14px; font-weight: 600; color: var(--ink);
+  background: color-mix(in srgb, var(--brand) 9%, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--brand) 28%, transparent);
+  transition: transform .2s, border-color .2s, background-color .2s;
+}
+.tools li.tool img { width: 18px; height: 18px; display: block; flex: none; }
+.tools li.tool:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--brand) 60%, transparent); }
+.tool--python  { --brand: #3776ab; }
+.tool--tableau { --brand: #e97627; }
+.tool--mysql   { --brand: #00758f; }
+.tool--excel   { --brand: #107c41; }
+.tool .on-dark { display: none !important; }
+:root[data-theme="dark"] .tool .on-light { display: none !important; }
+:root[data-theme="dark"] .tool .on-dark { display: block !important; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tool .on-light { display: none !important; }
+  :root:not([data-theme="light"]) .tool .on-dark { display: block !important; }
+}
+:root[data-theme="dark"] .tools li.tool { background: color-mix(in srgb, var(--brand) 16%, var(--paper)); border-color: color-mix(in srgb, var(--brand) 45%, transparent); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tools li.tool { background: color-mix(in srgb, var(--brand) 16%, var(--paper)); border-color: color-mix(in srgb, var(--brand) 45%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) { .tools li.tool { transition: none; } .tools li.tool:hover { transform: none; } }
