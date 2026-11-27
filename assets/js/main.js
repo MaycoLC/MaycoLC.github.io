@@ -336,6 +336,50 @@
     });
   });
 
+  // ---------- Formulario de contacto (FormSubmit, sin servidor propio) ----------
+  safe("form", function () {
+    var form = document.querySelector("[data-form]");
+    var status = document.querySelector("[data-form-status]");
+    if (!form || !window.fetch || !window.FormData) return; // sin JS el formulario se envía igual
+    var btn = form.querySelector("button[type=submit]");
+    var label = btn ? btn.querySelector("span") : null;
+    var M = EN ? {
+      sending: "Sending…", ok: "Thanks! Your message was sent. I'll get back to you soon.",
+      fail: "The message couldn't be sent. You can write to me at ", send: "Send message"
+    } : {
+      sending: "Enviando…", ok: "¡Gracias! Tu mensaje se envió. Te respondo pronto.",
+      fail: "No se pudo enviar el mensaje. Podés escribirme a ", send: "Enviar mensaje"
+    };
+    var email = form.getAttribute("action").split("/").pop();
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var data = new FormData(form);
+      if (data.get("_honey")) { form.reset(); return; } // bot
+      var payload = {};
+      data.forEach(function (v, k) { if (k !== "_honey") payload[k] = v; });
+      payload._replyto = payload.email;
+      btn.disabled = true; if (label) label.textContent = M.sending;
+      status.className = "cform__status"; status.textContent = "";
+      fetch("https://formsubmit.co/ajax/" + email, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          if (!res.ok || String(res.j.success) !== "true") throw new Error(res.j.message || "error");
+          form.reset();
+          status.className = "cform__status is-ok"; status.textContent = M.ok;
+        })
+        .catch(function () {
+          status.className = "cform__status";
+          status.textContent = M.fail;
+          var a = document.createElement("a"); a.href = "mailto:" + email; a.textContent = email;
+          status.appendChild(a); status.appendChild(document.createTextNode("."));
+        })
+        .then(function () { btn.disabled = false; if (label) label.textContent = M.send; });
+    });
+  });
+
   // ---------- Año del pie ----------
   safe("year", function () {
     var y = document.querySelector("[data-year]");

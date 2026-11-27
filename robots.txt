@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maycolc.github.io/sitemap.xml
